@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo App</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,500;9..40,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./estilos.css">
+</head>
+<body>
+
+    <main class="app">
+
+        <header class="app__header">
+            <h1 class="title">Todo List App</h1>
+
+            <button class="btn" id="add-task">
+                <img src="./assets/plus.svg" class="btn__image">
+                Agregar Tareas
+            </button>
+
+            <form id="filter">
+                <div>
+                    <input type="radio" name="filter" id="all" class="filter__input" value="all">
+                    <label for="all">Todas las tareas</label>
+                </div>
+
+                <div>
+                    <input type="radio" name="filter" id="pending" value="pending" class="filter__input">
+                    <label for="pending">Pendientes</label>
+                </div>
+
+                <div>
+                    <input type="radio" name="filter" id="done" value="done" class="filter__input">
+                    <label for="done">Hechas</label>
+                </div>
+
+                <button>Submit</button>
+            </form>
+        </header>
+        
+        
+
+        <dialog class="modal" id="modal-form">
+            <form action="" id="form-task" class="modal__form">
+                <h2 class="modal__title">
+                    Agrega una Tarea  
+                    <button class="close" id="close-modal">
+                        <img src="./assets/close.svg" class="close__img">
+                    </button>
+                </h2>
+
+                <div class="modal__position">
+
+                    <input type="text" placeholder="Ingresa tu tarea" id="task-input" class="modal__task">
+                    <button class="btn btn--form">Agregar Tarea</button>
+                    <button type="reset" class="btn btn--form btn--outline">Reiniciar Formulario</button>
+
+                </div>
+                
+            </form>
+        </dialog>
+       
+    
+        <ul class="tasks" id="tasks-container">
+    
+            <template id="template-task">
+                <li class="tasks__item" data-state="incomplete">
+                    <input type="checkbox" class="tasks__checked">
+                    <p class="tasks__name">Tarea</p>
+                    <button class="close close--task">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill:#FF3434;" class="close__img"><path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm4.207 12.793-1.414 1.414L12 13.414l-2.793 2.793-1.414-1.414L10.586 12 7.793 9.207l1.414-1.414L12 10.586l2.793-2.793 1.414 1.414L13.414 12l2.793 2.793z"></path></svg>
+                    </button>
+                </li>
+            </template>
+            
+        </ul>
+
+    </main>
+
+    
+
+
+    <script src="./app.js"></script>
+    
+</body>
+</html>
