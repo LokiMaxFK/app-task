@@ -1,3 +1,5 @@
+/* Estilos generales */ 
+
 *{
     margin: 0;
     padding: 0;
@@ -11,9 +13,7 @@
 body{
     font-family: 'DM Sans', sans-serif;
     background-color: #fff;
-    height: 300vh;
 }
-
 
 input, label, button{
     font: inherit;
@@ -27,9 +27,16 @@ input, label, button{
     padding: 80px 0;
 }
 
+/* Header de la página */ 
+
 .app__header{
     padding-bottom: 2rem;
     border-bottom: 1px solid #ddd;
+}
+
+.app__actions{
+    display: flex;
+    gap: 1.5rem;
 }
 
 .title{
@@ -38,6 +45,7 @@ input, label, button{
 }
 
 .btn{
+    
     background-color: var(--btn-color);
     color: white;
     padding:.3rem 1rem;
@@ -63,10 +71,59 @@ input, label, button{
     color: black;
 }
 
-
 .btn:active{
-    transform: scale(1.05);
+    transform: scale(1.02);
 }
+
+/* Diseño del área de filtrado */
+
+.app__filter{
+   
+    position: relative;
+    width: max-content;
+    height: max-content;
+}
+
+.filter{
+    opacity: 0;
+    pointer-events: none;
+    position: absolute;
+    top: 40px;
+    left: 2px;
+
+    display: grid;
+    box-shadow: 0 0 2px rgb(0 0 0 / .5);
+    background-color: white;
+
+    transition: opacity .3s;
+    z-index: 1000;
+    padding: 1.8rem 2.5rem;
+    width: max-content;
+    border-radius: 5px;
+
+    display: grid;
+    gap: 1rem;
+}
+
+.filter--show{
+    opacity: 1;
+    pointer-events: unset;
+}
+
+.filter__option{
+    display: flex;
+    gap: 1rem;
+}
+
+.filter__input{
+    appearance: none;
+    width: 1.5rem;
+    height: 1.5rem;
+    border: 1px solid var(--btn-color);
+    border-radius: 4px;
+}
+
+/* Crear modal de tareas */
 
 .modal{
     inset: 0;
@@ -85,9 +142,7 @@ input, label, button{
 :modal{
     border: none;
     border-radius: 10px;
-    
 }
-
 
 .modal__form{
     padding: 2.5rem 2rem;
@@ -135,25 +190,31 @@ input, label, button{
     border: 1px solid #ccc;
     border-radius: 8px;
     background-color: #F6FAFD;
-
-   
 }
+
+/* Establecer estilos de las tareas */
 
 .tasks{
     margin: 60px 0;
     display: grid;
     gap: 1rem;
+    --complete: flex;
+    --incomplete: flex;
 }
 
 .tasks--complete{
-    --complete: 0;
-    --incomplete: 0;
+    --complete: flex;
+    --incomplete: none;
+}
+
+.tasks--incomplete{
+    --complete: none;
+    --incomplete: flex;
 }
 
 .tasks__item{
     padding: 1rem ;
     border-radius: 10px;
-    display: flex;
     gap: 1rem;
 
     animation: show 1s .1s both;
@@ -166,7 +227,7 @@ input, label, button{
     transition: background-color .2s;
 }
 
-.tasks__checked{
+.tasks__checked, .filter__input{
     width: 20px;
     height: 20px;
     border: 1px solid #ddd;
@@ -179,7 +240,7 @@ input, label, button{
     --checked: 0;
 }
 
-.tasks__checked::after{
+:is(.tasks__checked, .filter__input)::after{
     content: "";
     width: 80%;
     height: 80%;
@@ -190,12 +251,10 @@ input, label, button{
     transition: opacity .3s;
 }
 
-.tasks__checked:checked{
+:is(.tasks__checked, .filter__input):checked{
     background-color: #3b40d5a7;
     --checked: 1;
 }
-
-
 
 .tasks__name{
     color: var(--color-task);
@@ -211,7 +270,7 @@ input, label, button{
     --color-task: #000;
     --text-decoration: none;
 
-    opacity: 0;
+    display: var(--incomplete);
 }
 
 [data-state="complete"]{
@@ -219,8 +278,10 @@ input, label, button{
     --color-task: #ddd;
     --text-decoration: line-through;
 
-    opacity: var(--complete);
+    display: var(--complete);
 }
+
+/* Animaciones personalizadas. */
 
 @keyframes show {
     0%{
@@ -241,4 +302,15 @@ input, label, button{
         transform: translateY(100%);
         opacity: 0;
     }
+}
+
+@media (width < 600px) {
+    .app__actions{
+        flex-direction: column;
+    }
+
+    .app__actions > *{
+        width: max-content;
+    }
+    
 }

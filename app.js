@@ -6,29 +6,46 @@ const formFilter = document.querySelector("#filter");
 const modalForm = document.querySelector('#modal-form');
 const btnAddTask = document.querySelector("#add-task");
 const btnCloseModal = document.querySelector("#close-modal");
+const buttonTooltips = document.querySelector("#button-tooltip");
+const templateTask = document.querySelector("#template-task");
 
+
+
+// Leer datos localstorage y renderizar imágenes.
 let tasks = JSON.parse(localStorage.getItem("tasks")) ?? [];
 
-console.dir(tasks);
-
-if(localStorage.getItem("tasks")){
-    tasks.forEach(task => {
-        renderTask(task);
-    });
-}
+tasks.forEach(task => {
+    renderTask(task);
+});
 
 
+// Activar/Desactivar Formulario de Filtros
+buttonTooltips.addEventListener('click', ()=>{
+    formFilter.classList.toggle("filter--show");
+});
+
+
+// Evento que determina los filtros.
 formFilter.addEventListener("submit", function(e){
     e.preventDefault();
 
+    tasksContainer.className = "tasks";
+
     const currentValue = document.querySelector(".filter__input:checked").value ?? "all";
-    
+
     if(currentValue === "done"){
         tasksContainer.classList.add("tasks--complete");
+    }else if(currentValue === "pending"){
+        tasksContainer.classList.add("tasks--incomplete");
     }
+
+    // Quitamos la ventana de filtros.
+    formFilter.classList.remove("filter--show");
+
 })
 
-// Cambiar Texto o Estados
+
+// Actualizar tarea & determinar su estado.
 tasksContainer.addEventListener('input', (e)=>{
     
     const currentTaskId = e.target.closest('.tasks__item');
@@ -42,9 +59,10 @@ tasksContainer.addEventListener('input', (e)=>{
         updateTaskState(currentTaskId.id, currentTaskId, e.target.checked);
     }
 
-
 });
 
+
+// Evento eliminar tarea
 tasksContainer.addEventListener('click', function(e){
 
     const currentTask = e.target.closest('.tasks__item');
@@ -52,10 +70,9 @@ tasksContainer.addEventListener('click', function(e){
         deleteTask(currentTask);
     }
 
-   
 });
 
-// Agregar Tarea
+// 1- Evento agregar tareas
 formTask.addEventListener('submit', function(e){
     e.preventDefault();
 
@@ -73,17 +90,21 @@ formTask.addEventListener('submit', function(e){
     this.reset();
 });
 
+
+//Abrir & Cerrar modal.
 btnAddTask.addEventListener('click', function(e){
     modalForm.showModal();
+    modalForm.querySelector("input").focus();
 });
 
 btnCloseModal.addEventListener('click', closeModal);
 
 
-// Crear Tarea Nueva
-function createTask(task){
+
+// 2-  Crear Tarea Nueva
+function createTask(taskName){
     return newTask = {
-        name: task,
+        name: taskName,
         completed: false,
         id: new Date().getTime() 
     }
@@ -91,19 +112,19 @@ function createTask(task){
 
 // Renderizar tarea
 function renderTask(task){
-    const templateTask = document.querySelector("#template-task");
-    const taskTemplate = document.importNode(templateTask.content, true);
-
-    console.log(task.completed);
+    const taskTemplate = templateTask.content.cloneNode(true);
 
     if(task.completed){
+
         taskTemplate.querySelector('.tasks__item').dataset.state = "complete"
         taskTemplate.querySelector('[type="checkbox"]').checked = true;
-    }else{
-        taskTemplate.querySelector('.tasks__item').dataset.state = "incomplete"
-    }
 
-    console.log();
+    }else{
+
+        taskTemplate.querySelector('.tasks__item').dataset.state = "incomplete"
+        taskTemplate.querySelector('p').contentEditable = true;
+
+    }
 
     taskTemplate.querySelector('p').textContent = task.name;
     taskTemplate.querySelector('li').id = task.id;
@@ -111,14 +132,14 @@ function renderTask(task){
     tasksContainer.append(taskTemplate);
 }
 
+// Actualizar nombre de la tarea
 function updateTaskName(id, value){
-
     const [currentTask] = getTaskByID(id);
     currentTask.name = value;
     localStorage.setItem("tasks", JSON.stringify(tasks));
-
 }
 
+// Actualizar estado de la tarea
 function updateTaskState(id, element, taskState){
     const [currentTask] = getTaskByID(id);
 
@@ -137,6 +158,7 @@ function updateTaskState(id, element, taskState){
 
 }
 
+// Eliminar la tarea
 function deleteTask(element){
     const currentId = parseInt(element.id);
     const newTasks = tasks.filter((task) => task.id !== currentId);
@@ -152,7 +174,7 @@ function deleteTask(element){
     });
 }
 
-
+// Obtener una tarea por ID
 function getTaskByID (id){
     const currentId = parseInt(id);
 
@@ -160,8 +182,10 @@ function getTaskByID (id){
 }
 
 
+// Funcion que cierra el modal
 function closeModal(){
     const modal = modalForm.closest('dialog[open]');
+
     modal.style.animation = "fade .3s forwards"; 
     
     modal.addEventListener('animationend', function(e){
